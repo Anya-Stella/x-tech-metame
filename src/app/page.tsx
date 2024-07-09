@@ -1,113 +1,105 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { useState } from 'react';
+import { updateProfile } from './action';
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+export default function Page() {
+	const [profile, setProfile] = useState({
+		gender: '',
+		age: '',
+		mbti: '',
+		introduction: '',
+		interest1: '',
+		interest2: '',
+		interest3: '',
+	});
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+		const { name, value } = e.target;
+		setProfile({ ...profile, [name]: value });
+	};
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		console.log("moove");
+		e.preventDefault();
+		try {
+			const res = await updateProfile(profile);
+			console.log("submit success");
+			setProfile({
+				gender: '',
+				age: '',
+				mbti: '',
+				introduction: '',
+				interest1: '',
+				interest2: '',
+				interest3: '',
+			})
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+	return (
+		<main className="flex h-screen items-center justify-center bg-teal-600">
+			<div className="container rounded-xl w-7/12 h-5/6 p-8 bg-white text-black bg-opacity-90 flex flex-col justify-around items-center">
+				<h1 className="text-3xl font-bold py-3 text-yellow-400 text-left w-full">プロフィール詳細</h1>
+				<form onSubmit={handleSubmit} className="h-5/6 flex flex-col w-full items-start justify-start">
+					<div className='w-full overflow-y-auto'>
+						<div className="w-2/6 pt-3">
+							<label htmlFor="gender" className="block text-lg font-semibold pl-2">性別</label>
+							<select id="gender" name="gender" className="w-full p-2 mt-2 border rounded-lg" value={profile.gender} onChange={handleChange}>
+								<option value="">選択してください</option>
+								<option value="male">男性</option>
+								<option value="female">女性</option>
+								<option value="other">その他</option>
+							</select>
+						</div>
+						<div className="w-2/6 pt-3">
+							<label htmlFor="age" className="block text-lg font-semibold pl-2">年齢</label>
+							<input type="number" id="age" name="age" className="w-full p-2 mt-2 border rounded-lg" placeholder="年齢を入力してください" value={profile.age} onChange={handleChange} />
+						</div>
+						<div className="w-full pt-3">
+							<label htmlFor="mbti" className="block text-lg font-semibold pl-2">MBTI</label>
+							<select id="mbti" name="mbti" className="w-full p-2 mt-2 border rounded-lg" value={profile.mbti} onChange={handleChange}>
+								<option value="">選択してください</option>
+								<option value="INTJ">INTJ</option>
+								<option value="INTP">INTP</option>
+								<option value="ENTJ">ENTJ</option>
+								<option value="ENTP">ENTP</option>
+								<option value="INFJ">INFJ</option>
+								<option value="INFP">INFP</option>
+								<option value="ENFJ">ENFJ</option>
+								<option value="ENFP">ENFP</option>
+								<option value="ISTJ">ISTJ</option>
+								<option value="ISFJ">ISFJ</option>
+								<option value="ESTJ">ESTJ</option>
+								<option value="ESFJ">ESFJ</option>
+								<option value="ISTP">ISTP</option>
+								<option value="ISFP">ISFP</option>
+								<option value="ESTP">ESTP</option>
+								<option value="ESFP">ESFP</option>
+								<option value="none">分からない</option>
+							</select>
+						</div>
+						<div className="w-full pt-3">
+							<h1 className="text-lg font-semibold pl-2">自己紹介</h1>
+							<textarea id="introduction" name="introduction" className="w-full p-2 mt-2 border rounded-lg" placeholder="自己紹介を書いて下さい！" rows={4} value={profile.introduction} onChange={handleChange}></textarea>
+						</div>
+						<div className="w-full pt-3">
+							<h1 className="text-lg font-semibold pl-2">話したい事・興味ある事</h1>
+							<input type="text" name="interest1" className="w-full p-2 mt-2 border rounded-lg" placeholder="興味ある事 1" value={profile.interest1} onChange={handleChange} />
+							<input type="text" name="interest2" className="w-full p-2 mt-2 border rounded-lg" placeholder="興味ある事 2" value={profile.interest2} onChange={handleChange} />
+							<input type="text" name="interest3" className="w-full p-2 mt-2 border rounded-lg" placeholder="興味ある事 3" value={profile.interest3} onChange={handleChange} />
+						</div>
+					</div>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+					<div className='w-full flex justify-center items-end'>
+						<button type='submit' className="px-8 py-4 mt-4 bg-blue-500 text-white rounded w-1/2 bg-yellow-500 hover:bg-yellow-300">更新する</button>
+					</div>
+
+				</form>
+			</div>
+		</main>
+	);
 }
+
