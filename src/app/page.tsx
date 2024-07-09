@@ -47,7 +47,7 @@ export default function Page() {
 	};
 
 	return (
-		<main className="flex h-screen items-center justify-center bg-teal-600">
+		<main className="flex h-screen items-center justify-center bg-gradient-to-r from-yellow-300 to-teal-600">
 			{/* アラート */}
 			{alertMessage && (
 				<div className="fixed top-0 left-0 w-full bg-green-500 text-white text-center py-2">
