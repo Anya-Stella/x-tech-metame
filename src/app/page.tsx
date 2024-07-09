@@ -14,6 +14,8 @@ export default function Page() {
 		interest3: '',
 	});
 
+	const [alertMessage, setAlertMessage] = useState('');
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 		setProfile({ ...profile, [name]: value });
@@ -34,13 +36,27 @@ export default function Page() {
 				interest2: '',
 				interest3: '',
 			})
+			setAlertMessage('送信完了しました');
+			setTimeout(() => setAlertMessage(""), 3000);
 		} catch (error) {
+			setAlertMessage('エラーが発生しました。再度お試しください。');
+			setTimeout(() => setAlertMessage(""), 3000);
 			console.error(error);
+
 		}
 	};
 
 	return (
 		<main className="flex h-screen items-center justify-center bg-teal-600">
+			{/* アラート */}
+			{alertMessage && (
+				<div className="fixed top-0 left-0 w-full bg-green-500 text-white text-center py-2">
+					{alertMessage}
+				</div>
+			)}
+
+
+
 			<div className="container rounded-xl w-7/12 h-5/6 p-8 bg-white text-black bg-opacity-90 flex flex-col justify-around items-center">
 				<h1 className="text-3xl font-bold py-3 text-yellow-400 text-left w-full">プロフィール詳細</h1>
 				<form onSubmit={handleSubmit} className="h-5/6 flex flex-col w-full items-start justify-start">
