@@ -10,6 +10,7 @@ export async function getData() {
 }
 
 export const updateProfile = async (profile: {
+	name: string,
 	gender: string;
 	age: string;
 	mbti: string;
@@ -20,6 +21,7 @@ export const updateProfile = async (profile: {
 }) => {
 	await sql`CREATE TABLE IF NOT EXISTS profiles (
     id SERIAL PRIMARY KEY,
+	name TEXT,
     gender TEXT,
     age INTEGER,
     mbti TEXT,
@@ -29,7 +31,10 @@ export const updateProfile = async (profile: {
     interest3 TEXT
   )`;
 
-	await sql`INSERT INTO profiles (gender, age, mbti, introduction, interest1, interest2, interest3) VALUES (
+
+	const [rv] = await sql`INSERT INTO profiles (name, gender, age, mbti, introduction, interest1, interest2, interest3)
+	VALUES (
+    ${profile.name},
     ${profile.gender},
     ${profile.age},
     ${profile.mbti},
@@ -37,5 +42,9 @@ export const updateProfile = async (profile: {
     ${profile.interest1},
     ${profile.interest2},
     ${profile.interest3}
-  )`;
+  	)
+	RETURNING id, name
+	`;
+
+	return rv;
 };

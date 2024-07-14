@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { updateProfile } from './action';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
 	const [profile, setProfile] = useState({
+		name: '',
 		gender: '',
 		age: '',
 		mbti: '',
@@ -13,7 +15,7 @@ export default function Page() {
 		interest2: '',
 		interest3: '',
 	});
-
+	const router = useRouter();
 	const [alertMessage, setAlertMessage] = useState('');
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -23,11 +25,15 @@ export default function Page() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		console.log("moove");
+		console.log(profile);
 		e.preventDefault();
+
 		try {
 			const res = await updateProfile(profile);
 			console.log("submit success");
+			console.log(res);
 			setProfile({
+				name: '',
 				gender: '',
 				age: '',
 				mbti: '',
@@ -36,6 +42,13 @@ export default function Page() {
 				interest2: '',
 				interest3: '',
 			})
+
+			//  ページ遷移
+			router.push(`http://localhost:3000/?id=${res.id}&name=${res.name}`);
+
+
+
+			// ここ表示されないかも
 			setAlertMessage('送信完了しました');
 			setTimeout(() => setAlertMessage(""), 3000);
 		} catch (error) {
@@ -61,6 +74,16 @@ export default function Page() {
 				<h1 className="text-3xl font-bold py-3 text-yellow-400 text-left w-full">プロフィール詳細</h1>
 				<form onSubmit={handleSubmit} className="h-5/6 flex flex-col w-full items-start justify-start">
 					<div className='w-full overflow-y-auto'>
+
+
+						{/* 名前 */}
+						<div className="w-2/6 pt-5">
+							<label htmlFor="name" className="block text-lg font-semibold pl-2">名前</label>
+							<input type="text" id="name" name="name" className="w-full p-2 mt-2 border rounded-lg" placeholder="名前を入力してください" value={profile.name} onChange={handleChange} />
+						</div>
+
+
+
 						<div className="w-2/6 pt-3">
 							<label htmlFor="gender" className="block text-lg font-semibold pl-2">性別</label>
 							<select id="gender" name="gender" className="w-full p-2 mt-2 border rounded-lg" value={profile.gender} onChange={handleChange}>
